@@ -86,13 +86,18 @@ class IDS:
             for component in _character.composition:
                 _component = self._characters.get(component, None)
                 if _component is not None:
+
                     if len(_component.composition) > 1:
+                        composition += " {%s:"%_component.character
                         composition += self.get_flatten_composition(
                             _component.character, composition
                         )
+                        composition += "} "
                     else:
                         composition += _component.character
-        return composition
+                else:
+                    composition += component
+        return composition 
 
     def get_characters_used_by(self, component):
         return self._component_to_characters.get(component, "")
@@ -102,7 +107,7 @@ if __name__ == "__main__":
     ids = IDS()
     print("----")
     print("Composition")
-    for char in "吃僰汄嚻":
+    for char in "吃僰汄嚻忁圗渁":
         print(char, "->", ids.get_character_composition(character=char))
         print("\n")
 
@@ -114,21 +119,25 @@ if __name__ == "__main__":
 
     print("\n----")
     print("Flatten composition")
-    for char in "僰嚻忁":
+    for char in "僰嚻忁圗渁辔":
         print(char, "->", ids.get_flatten_composition(char))
         print("\n")
 
     print("\n----")
     print("Used by")
-    for char in "人⿶⿲水⿳":
+    for char in "人⿶⿲水⿳凼":
         print(char, "->", "".join(ids.get_characters_used_by(component=char)))
         print("\n")
 
     print("\n----")
     print("Similar")
-    for char in "吃僰汄凼洞渆嘂壱请":
+    for char in "吃僰汄凼洞渆嘂壱请豪":
         print(char, ":")
         similar = ids.get_character_similar_to(character=char)
         for k, v in similar.items():
             print("\t", "".join(k), ":", "".join(v))
         print("\n")
+
+    print("\n----")
+    for char in ids.get_characters_used_by(component="\t"):
+        print(char, "->", ids.get_character_composition(char))
