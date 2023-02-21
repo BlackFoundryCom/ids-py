@@ -99,8 +99,18 @@ class IDS:
                     composition += component
         return composition 
 
-    def get_characters_used_by(self, component):
-        return self._component_to_characters.get(component, "")
+    def get_characters_used_by(self, component, structure = None):
+        characters = self._component_to_characters.get(component, "")
+        if structure is None:
+            return characters
+        else:
+            structures = defaultdict(list)
+            for character in characters:
+                s = self.get_character_structure(character)
+                if structure != "all" and s != structure:
+                    continue
+                structures[s].append(character)
+            return structures
 
 
 if __name__ == "__main__":
@@ -129,9 +139,14 @@ if __name__ == "__main__":
         print(char, "->", "".join(ids.get_characters_used_by(component=char)))
         print("\n")
 
+    for char in "耳":
+        used_by = ids.get_characters_used_by("耳", structure = "all")
+        for k, v in used_by.items():
+            print(f"{char}{k}", "->", "".join(sorted(v)))
+
     print("\n----")
     print("Similar")
-    for char in "吃僰汄凼洞渆嘂壱请豪":
+    for char in "吃僰汄凼洞渆嘂壱请豪耿":
         print(char, ":")
         similar = ids.get_character_similar_to(character=char)
         for k, v in similar.items():
@@ -141,3 +156,4 @@ if __name__ == "__main__":
     print("\n----")
     for char in ids.get_characters_used_by(component="\t"):
         print(char, "->", ids.get_character_composition(char))
+
