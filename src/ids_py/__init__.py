@@ -1,8 +1,8 @@
 from collections import defaultdict
-
+from importlib.resources import files
+import os
 from fontTools import unicodedata
 
-import os
 
 DATA_DIR = "ids_data"
 
@@ -49,12 +49,12 @@ class IDS:
     def __init__(self):
         self._characters = {}
         self._component_to_characters = defaultdict(list)
-        for name in os.listdir(DATA_DIR):
-            if not name.endswith('.txt'):
-                continue
 
-            path = os.path.join(DATA_DIR, name)
-            with open(path, 'r', encoding = 'utf-8') as file:
+        data_dir = files("ids_py.ids_data")
+        source_paths = [p for p in data_dir.iterdir() if p.suffix == ".txt"]
+
+        for path in source_paths:
+            with open(path, "r", encoding="utf-8") as file:
                 data = file.read()
 
             for line in data.splitlines()[1:]:
@@ -96,9 +96,8 @@ class IDS:
             for component in _character.composition:
                 _component = self._characters.get(component, None)
                 if _component is not None:
-
                     if len(_component.composition) > 1:
-                        composition += " {%s:"%_component.character
+                        composition += " {%s:" % _component.character
                         composition += self.get_flatten_composition(
                             _component.character, composition
                         )
@@ -107,9 +106,9 @@ class IDS:
                         composition += _component.character
                 else:
                     composition += component
-        return composition 
+        return composition
 
-    def get_characters_used_by(self, component, structure = None):
+    def get_characters_used_by(self, component, structure=None):
         characters = self._component_to_characters.get(component, "")
         if structure is None:
             return characters
@@ -150,7 +149,7 @@ if __name__ == "__main__":
         print("\n")
 
     for char in "耳":
-        used_by = ids.get_characters_used_by("耳", structure = "all")
+        used_by = ids.get_characters_used_by("耳", structure="all")
         for k, v in used_by.items():
             print(f"{char}{k}", "->", "".join(sorted(v)))
 
@@ -166,4 +165,3 @@ if __name__ == "__main__":
     print("\n----")
     for char in ids.get_characters_used_by(component="\t"):
         print(char, "->", ids.get_character_composition(char))
-
