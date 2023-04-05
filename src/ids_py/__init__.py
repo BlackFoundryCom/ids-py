@@ -1,8 +1,8 @@
 from collections import defaultdict
-
+from importlib.resources import files
+import os
 from fontTools import unicodedata
 
-import os
 
 DATA_DIR = "ids_data"
 
@@ -49,12 +49,12 @@ class IDS:
     def __init__(self):
         self._characters = {}
         self._component_to_characters = defaultdict(list)
-        for name in os.listdir(DATA_DIR):
-            if not name.endswith('.txt'):
-                continue
 
-            path = os.path.join(DATA_DIR, name)
-            with open(path, 'r', encoding = 'utf-8') as file:
+        data_dir = files("ids_py.ids_data")
+        source_paths = [p for p in data_dir.iterdir() if p.suffix == ".txt"]
+
+        for path in source_paths:
+            with open(path, "r", encoding="utf-8") as file:
                 data = file.read()
 
             for line in data.splitlines()[1:]:
