@@ -2,3 +2,6 @@
 venv*
 *.egg*
 *__pycache__
+
+# scm file
+src/ids_py/_version.py
