@@ -26,7 +26,7 @@ IDS_UCS_URLs = [
     "IDS-UCS-Compat"
 ]
 
-OUTPUT_DIR = "src/ids_py/ids_data"
+OUTPUT_DIR = "src/ids_py/data"
 if not os.path.isdir(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
