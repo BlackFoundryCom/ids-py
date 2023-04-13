@@ -56,7 +56,7 @@ for filename, url in IDS_UCS_URLs.items():
             component_to_characters[component].append(_character)
 
 with open(character_composition_output_path, "w", encoding="utf-8") as file:
-    file.write(json.dumps(characters, indent=4, separators=(",", ": ")))
+    json.dump(characters, file, indent=2, ensure_ascii=False)
 
 with open(components_to_characters_output_path, "w", encoding="utf-8") as file:
     file.write(json.dumps(component_to_characters, indent=4, separators=(",", ": ")))
