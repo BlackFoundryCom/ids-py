@@ -59,4 +59,4 @@ with open(character_composition_output_path, "w", encoding="utf-8") as file:
     json.dump(characters, file, indent=2, ensure_ascii=False)
 
 with open(components_to_characters_output_path, "w", encoding="utf-8") as file:
-    file.write(json.dumps(component_to_characters, indent=4, separators=(",", ": ")))
+    json.dump(component_to_characters, file, indent=2, ensure_ascii=False)
