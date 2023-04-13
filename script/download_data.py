@@ -25,12 +25,18 @@ IDS_UCS_URLs = dict(
 OUTPUT_DIR = "src/ids_py/ids_data"
 if not os.path.isdir(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
+output_path = os.path.join(OUTPUT_DIR, "IDS_data.txt")
+
+txt = ""
 
 for filename, url in IDS_UCS_URLs.items():
     response = requests.get(url)
     data = response.content
     content = data.decode("utf-8")
+    txt += "\n".join(content.splitlines()[1:])
+    if not txt.endswith("\n"):
+        txt += "\n"
+    # output_path = os.path.join(OUTPUT_DIR, url.split("/")[-1])
 
-    output_path = os.path.join(OUTPUT_DIR, url.split("/")[-1])
-    with open(output_path, 'w', encoding = 'utf-8') as file:
-        file.write(content)
+with open(output_path, 'w', encoding = 'utf-8') as file:
+    file.write(txt)
