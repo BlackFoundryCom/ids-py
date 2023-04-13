@@ -5,12 +5,14 @@ from importlib.resources import files
 
 from fontTools import unicodedata
 
-DATA_DIR = "ids_data"
 
 STRUCTURE = "IDEOGRAPHIC DESCRIPTION CHARACTER"
 
-CHARACTERS_COMPOSITION_PATH = "src/ids_py/ids_data/IDS_characters_composition.json"
-COMPONENTS_TO_CHARACTERS_PATH = "src/ids_py/ids_data/IDS_components_to_characters.json"
+DATA_DIR = files("ids_py.data")
+
+CHARACTERS_COMPOSITION_PATH = DATA_DIR.joinpath('IDS_characters_composition.json')
+
+COMPONENTS_TO_CHARACTERS_PATH = DATA_DIR.joinpath('IDS_components_to_characters.json')
 
 with open(CHARACTERS_COMPOSITION_PATH, "r", encoding="utf-8") as file:
     characters = json.loads(file.read())
