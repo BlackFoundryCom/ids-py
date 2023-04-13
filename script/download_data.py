@@ -7,7 +7,7 @@ import requests
 GITLAB_CHISE_IDS_URL = "https://gitlab.chise.org/CHISE/ids/"
 MASTER_RAW = f"{GITLAB_CHISE_IDS_URL}-/raw/master/"
 
-IDS_UCS_URLs = [
+IDS_UCS_FILENAMES = [
     "IDS-UCS-Basic",
     "IDS-UCS-Ext-A",
     "IDS-UCS-Ext-B-1",
@@ -40,7 +40,7 @@ components_to_characters_output_path = os.path.join(
 characters = {}
 component_to_characters = defaultdict(list)
 
-for filename in IDS_UCS_URLs:
+for filename in IDS_UCS_FILENAMES:
     url = f"{MASTER_RAW}{filename}.txt"
     response = requests.get(url)
     content = response.text
