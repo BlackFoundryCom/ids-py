@@ -40,18 +40,26 @@ components_to_characters_output_path = os.path.join(
 characters = {}
 component_to_characters = defaultdict(list)
 
+
+def parseUnicodeString(unicode_string):
+    return int(unicode_string[2:],16)
+
+
 for filename in IDS_UCS_FILENAMES:
     url = f"{MASTER_RAW}{filename}.txt"
     response = requests.get(url)
     content = response.text
-
+   
     for line in content.splitlines()[1:]:
         parts = line.split("\t")
         _unicode, _character = parts[:2]
         _composition = "\t".join(parts[2:])
-        characters[_character] = dict(
-            character=_character, unicode=_unicode, composition=_composition
-        )
+        if len(_character) > 1:
+            continue
+        parsed_unicode = parseUnicodeString(_unicode)
+        if ord(_character) != parsed_unicode:
+            _character = chr(parsed_unicode)
+        characters[_character] = _composition
         for component in _composition:
             component_to_characters[component].append(_character)
 
