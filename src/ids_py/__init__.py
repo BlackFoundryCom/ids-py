@@ -21,10 +21,9 @@ with open(COMPONENTS_TO_CHARACTERS_PATH, "r", encoding="utf-8") as file:
     components_to_characters = json.loads(file.read())
 
 
-def _component_order(character):
+def _component_order(composition):
     compo_order = []
     structure = ""
-    composition = character.get("composition", "")
     if "\t" in composition:
         composition = composition.split("\t")[0]
     for char in composition:
@@ -41,25 +40,23 @@ def _component_order(character):
     return compo_order
 
 
-def _structure(character):
+def _structure(composition):
     structure = ""
-    for char in character.get("composition"):
+    for char in composition:
         if STRUCTURE in unicodedata.name(char):
             structure += char
     return structure
 
 
 def get_character_structure(character):
-    _character = characters.get(character, None)
-    if _character is not None:
-        return _structure(_character)
+    composition = characters.get(character, None)
+    return _structure(composition)
 
 
 def get_character_composition(character):
-    _character = characters.get(character, None)
-    if _character is not None:
-        return _character.get("composition", "")
-
+    composition = characters.get(character, None)
+    return composition
+    
 
 def get_characters_used_by(component, structure=None):
     chars = components_to_characters.get(component, "")
@@ -76,10 +73,10 @@ def get_characters_used_by(component, structure=None):
 
 
 def get_character_similar_to(character):
-    _character = characters.get(character, None)
+    composition = characters.get(character, None)
     similar = defaultdict(list)
-    if _character is not None:
-        for index, compo in enumerate(_component_order(_character)):
+    if composition is not None:
+        for index, compo in enumerate(_component_order(composition)):
             characters_used_by = get_characters_used_by(compo[0])
             for character_used_by in characters_used_by:
                 _character_used_by = characters.get(character_used_by, None)
@@ -90,21 +87,21 @@ def get_character_similar_to(character):
     return similar
 
 
-def get_flatten_composition(character, composition=""):
-    composition = ""
-    _character = characters.get(character, None)
-    if _character is not None:
-        for component in _character.get("composition", ""):
+def get_flatten_composition(character, character_composition=""):
+    character_composition = ""
+    composition = characters.get(character, None)
+    if composition is not None:
+        for component in composition:
             _component = characters.get(component, None)
             if _component is not None:
-                if len(_component.get("composition")) > 1:
-                    composition += " {%s:" % _component.get(character, "")
-                    composition += get_flatten_composition(
-                        _component.get(character, ""), composition
+                if len(_component) > 1:
+                    character_composition += " {%s:" % component
+                    character_composition += get_flatten_composition(
+                        component, character_composition
                     )
-                    composition += "} "
+                    character_composition += "} "
                 else:
-                    composition += _component.get("character")
+                    character_composition += component
             else:
-                composition += component
-    return composition
+                character_composition += component
+    return character_composition
