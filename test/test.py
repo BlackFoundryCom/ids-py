@@ -5,19 +5,19 @@ import ids_py as ids
 print("----")
 print("Composition")
 for char in "侃吃僰汄嚻忁圗渁":
-    print(char, "->", ids.get_character_composition(character=char))
+    print(char, "->", ids.composition(character=char))
     print("\n")
 
 print("\n----")
 print("Structure")
 for char in "侃吃僰汄畵忁":
-    print(char, "->", ids.get_character_structure(character=char))
+    print(char, "->", ids.structure(character=char))
     print("\n")
 
 print("\n----")
 print("Flatten composition")
 for char in "侃僰嚻忁圗渁辔僲":
-    print(char, "->", ids.get_flatten_composition(char))
+    print(char, "->", ids.flatten_composition(char))
     print("\n")
 
 print("\n----")
@@ -25,11 +25,11 @@ print("\n----")
 print("Used by")
 
 for char in "侃人⿶⿲水⿳凼":
-    print(char, "->", "".join(ids.get_characters_used_by(component=char)))
+    print(char, "->", "".join(ids.used_by(component=char)))
     print("\n")
 
 for char in "耳":
-    used_by = ids.get_characters_used_by("耳", structure="all")
+    used_by = ids.used_by("耳", structure="all")
     for k, v in used_by.items():
         print(f"{char}{k}", "->", "".join(sorted(v)))
 
@@ -39,7 +39,7 @@ print("Similar")
 start = time.time()
 for char in "恰吃僰汄凼洞渆嘂壱请豪耿":
     print(char, ":")
-    similar = ids.get_character_similar_to(character=char)
+    similar = ids.similar_to(character=char)
     for k, v in similar.items():
         print("\t", "".join(k), ":", "".join(v))
     print("\n")

@@ -48,36 +48,37 @@ def _structure(composition):
     return structure
 
 
-def get_character_structure(character):
+def structure(character):
     composition = characters.get(character, None)
     return _structure(composition)
 
 
-def get_character_composition(character):
+def composition(character):
     composition = characters.get(character, None)
     return composition
 
 
-def get_characters_used_by(component, structure=None):
+def used_by(component, structure=None):
     chars = components_to_characters.get(component, "")
     if structure is None:
         return chars
     else:
         structures = defaultdict(list)
         for char in chars:
-            s = get_character_structure(char)
+            composition = characters.get(char, None)
+            s =  _structure(composition)
             if structure != "all" and s != structure:
                 continue
             structures[s].append(char)
         return structures
 
 
-def get_character_similar_to(character):
+def similar_to(character):
     composition = characters.get(character, None)
     similar = defaultdict(list)
     if composition is not None:
         for index, compo in enumerate(_component_order(composition)):
-            characters_used_by = get_characters_used_by(compo[0])
+            characters_used_by = used_by(compo[0])
             for character_used_by in characters_used_by:
                 _character_used_by = characters.get(character_used_by, None)
                 compo_order = _component_order(_character_used_by)
@@ -87,7 +88,7 @@ def get_character_similar_to(character):
     return similar
 
 
-def get_flatten_composition(character, character_composition=""):
+def flatten_composition(character, character_composition=""):
     character_composition = ""
     composition = characters.get(character, None)
     if composition is not None:
@@ -96,7 +97,7 @@ def get_flatten_composition(character, character_composition=""):
             if _component is not None:
                 if len(_component) > 1:
                     character_composition += " {%s:" % component
-                    character_composition += get_flatten_composition(
+                    character_composition += flatten_composition(
                         component, character_composition
                     )
                     character_composition += "} "
