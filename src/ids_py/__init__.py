@@ -48,14 +48,37 @@ def _structure(composition):
     return structure
 
 
+def _flatten_composition(character, character_composition=""):
+    character_composition = ""
+    composition = characters.get(character, None)
+    if composition is not None:
+        for component in composition:
+            _component = characters.get(component, None)
+            if _component is not None:
+                if len(_component) > 1:
+                    character_composition += " {%s:" % component
+                    character_composition += _flatten_composition(
+                        component, character_composition
+                    )
+                    character_composition += "} "
+                else:
+                    character_composition += component
+            else:
+                character_composition += component
+    return character_composition
+
+
 def structure(character):
     composition = characters.get(character, None)
     return _structure(composition)
 
 
-def composition(character):
-    composition = characters.get(character, None)
-    return composition
+def composition(character, flatten = False):
+    if flatten: 
+        return _flatten_composition(character)
+    else:
+        composition = characters.get(character, None)
+        return composition
 
 
 def used_by(component, structure=None):
@@ -86,23 +109,3 @@ def similar_to(character):
                     if compo == compo_order[index]:
                         similar[compo].append(character_used_by)
     return similar
-
-
-def flatten_composition(character, character_composition=""):
-    character_composition = ""
-    composition = characters.get(character, None)
-    if composition is not None:
-        for component in composition:
-            _component = characters.get(component, None)
-            if _component is not None:
-                if len(_component) > 1:
-                    character_composition += " {%s:" % component
-                    character_composition += flatten_composition(
-                        component, character_composition
-                    )
-                    character_composition += "} "
-                else:
-                    character_composition += component
-            else:
-                character_composition += component
-    return character_composition
