@@ -23,7 +23,7 @@ IDS_UCS_FILENAMES = [
     "IDS-UCS-Ext-G",
     "IDS-UCS-Ext-H",
     "IDS-UCS-Compat-Supplement",
-    "IDS-UCS-Compat"
+    "IDS-UCS-Compat",
 ]
 
 OUTPUT_DIR = "src/ids_py/data"
@@ -42,14 +42,15 @@ component_to_characters = defaultdict(list)
 
 
 def parseUnicodeString(unicode_string):
-    return int(unicode_string[2:],16)
+    assert unicode_string[:2] in ("U+", "U-")
+    return int(unicode_string[2:], 16)
 
 
 for filename in IDS_UCS_FILENAMES:
     url = f"{MASTER_RAW}{filename}.txt"
     response = requests.get(url)
     content = response.text
-   
+
     for line in content.splitlines()[1:]:
         parts = line.split("\t")
         _unicode, _character = parts[:2]
@@ -58,6 +59,7 @@ for filename in IDS_UCS_FILENAMES:
             continue
         parsed_unicode = parseUnicodeString(_unicode)
         if ord(_character) != parsed_unicode:
+            print("Inconsistency between", _character, parsed_unicode, _unicode)
             _character = chr(parsed_unicode)
         characters[_character] = _composition
         for component in _composition:

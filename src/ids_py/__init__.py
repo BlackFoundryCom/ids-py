@@ -10,9 +10,9 @@ STRUCTURE = "IDEOGRAPHIC DESCRIPTION CHARACTER"
 
 DATA_DIR = files("ids_py.data")
 
-CHARACTERS_COMPOSITION_PATH = DATA_DIR.joinpath('IDS_characters_composition.json')
+CHARACTERS_COMPOSITION_PATH = DATA_DIR.joinpath("IDS_characters_composition.json")
 
-COMPONENTS_TO_CHARACTERS_PATH = DATA_DIR.joinpath('IDS_components_to_characters.json')
+COMPONENTS_TO_CHARACTERS_PATH = DATA_DIR.joinpath("IDS_components_to_characters.json")
 
 with open(CHARACTERS_COMPOSITION_PATH, "r", encoding="utf-8") as file:
     characters = json.loads(file.read())
@@ -56,7 +56,7 @@ def get_character_structure(character):
 def get_character_composition(character):
     composition = characters.get(character, None)
     return composition
-    
+
 
 def get_characters_used_by(component, structure=None):
     chars = components_to_characters.get(component, "")
