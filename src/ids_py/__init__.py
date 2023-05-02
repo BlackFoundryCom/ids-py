@@ -48,22 +48,22 @@ def _structure(composition):
     return structure
 
 
-def _flatten_composition(character, character_composition=""):
-    character_composition2 = []
+def _flatten_composition(character, character_composition=[]):
+    character_composition = []
     composition = characters.get(character, None)
     if composition is not None:
         for component in composition:
             _component = characters.get(component, None)
             if _component is not None:
                 if len(_component) > 1:
-                    character_composition2.append({component:_flatten_composition(
+                    character_composition.append({component:_flatten_composition(
                         component, character_composition
                     )})
                 else:
-                    character_composition2.append(component)
+                    character_composition.append(component)
             else:
-                character_composition2.append(component)
-    return character_composition2
+                character_composition.append(component)
+    return character_composition
 
 
 def structure(character):
