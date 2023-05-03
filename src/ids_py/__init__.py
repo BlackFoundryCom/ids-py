@@ -5,7 +5,6 @@ from importlib.resources import files
 
 from fontTools import unicodedata
 
-
 STRUCTURE = "IDEOGRAPHIC DESCRIPTION CHARACTER"
 
 DATA_DIR = files("ids_py.data")
@@ -56,9 +55,13 @@ def _flatten_composition(character, character_composition=[]):
             _component = characters.get(component, None)
             if _component is not None:
                 if len(_component) > 1:
-                    character_composition.append({component:_flatten_composition(
-                        component, character_composition
-                    )})
+                    character_composition.append(
+                        {
+                            component: _flatten_composition(
+                                component, character_composition
+                            )
+                        }
+                    )
                 else:
                     character_composition.append(component)
             else:
@@ -71,8 +74,8 @@ def structure(character):
     return _structure(composition)
 
 
-def composition(character, flatten = False):
-    if flatten: 
+def composition(character, flatten=False):
+    if flatten:
         return _flatten_composition(character)
     else:
         composition = characters.get(character, None)
@@ -87,7 +90,7 @@ def used_by(component, structure=None):
         structures = defaultdict(list)
         for char in chars:
             composition = characters.get(char, None)
-            s =  _structure(composition)
+            s = _structure(composition)
             if structure != "all" and s != structure:
                 continue
             structures[s].append(char)
