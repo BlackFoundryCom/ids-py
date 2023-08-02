@@ -1,5 +1,6 @@
 import json
 import os
+import string
 from collections import defaultdict
 from importlib.resources import files
 
@@ -19,10 +20,13 @@ with open(CHARACTERS_COMPOSITION_PATH, "r", encoding="utf-8") as file:
 with open(COMPONENTS_TO_CHARACTERS_PATH, "r", encoding="utf-8") as file:
     components_to_characters = json.loads(file.read())
 
+character_structures = "⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻"
+
 
 def _component_order(composition):
     compo_order = []
     structure = ""
+    count = 0
     if "\t" in composition:
         composition = composition.split("\t")[0]
     for char in composition:
@@ -34,16 +38,26 @@ def _component_order(composition):
             continue
         if STRUCTURE in name:
             structure = char
+            count = 0
         else:
-            compo_order.append((char, structure))
+            if char in string.printable:
+                continue
+            if count == 0:
+                compo_order.append((char, structure))
+            else:
+                compo_order.append((structure, char))
+            count = 1
     return compo_order
 
 
 def _structure(composition):
     structure = ""
     for char in composition:
-        if STRUCTURE in unicodedata.name(char):
-            structure += char
+        try:
+            if STRUCTURE in unicodedata.name(char):
+                structure += char
+        except:
+            pass
     return structure
 
 
@@ -72,6 +86,11 @@ def _flatten_composition(character, character_composition=[]):
 def structure(character):
     composition = characters.get(character, None)
     return _structure(composition)
+
+
+def structural_composition(character):
+    composition = characters.get(character, None)
+    return _component_order(composition)
 
 
 def composition(character, flatten=False):
